@@ -1,7 +1,7 @@
-import React, { useReducer } from "react";
-import useApp from "./useApp";
+import React from "react";
+import useList from "./useList";
 
-const App = () => {
+export const List = () => {
   const {
     handleAddTaskFormSubmit,
     handleDateInputChange,
@@ -9,7 +9,11 @@ const App = () => {
     handleTitleInputChange,
     handleImageInputChange,
     state,
-  } = useApp();
+  } = useList();
+
+  if (state.loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -25,12 +29,7 @@ const App = () => {
 
         <label htmlFor="image">
           <div>Image</div>
-          <input
-            value={state.form.image}
-            id="image"
-            type="file"
-            onChange={handleImageInputChange}
-          />
+          <input id="image" type="file" onChange={handleImageInputChange} />
         </label>
 
         <label htmlFor="date">
@@ -47,11 +46,12 @@ const App = () => {
       </form>
 
       <ul>
-        {state.tasks.map(({ id, date, completed, title }) => {
+        {state.tasks.map(({ id, date, completed, image, title }) => {
           return (
             <li key={id}>
               <div>
                 <input type="checkbox" value={completed}></input>
+                {image && <img src={URL.createObjectURL(image)} alt="" />}
                 <div>{title}</div>
                 <div>
                   {Math.ceil((date - new Date().getTime()) / 1000 / 60)} minutes
@@ -69,4 +69,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default List;

@@ -8,13 +8,15 @@ const dbConnection = openDB("tasks", 1, {
   },
 });
 
-const createTask = async ({ id, title, date }) => {
+const createTask = async ({ id, title, date, image }) => {
   const db = await dbConnection;
-  db.add("tasks", {
+
+  await db.add("tasks", {
     id,
     title,
     date,
     completed: false,
+    image,
     created: new Date().getTime(),
   });
 };
@@ -22,9 +24,7 @@ const createTask = async ({ id, title, date }) => {
 const readTask = async (id) => {
   const db = await dbConnection;
   if (typeof id === "string") return await db.get(id);
-  if (Array.isArray(id)) return await db.getAll();
-
-  throw new Error("Invalid ID query");
+  return await db.getAll('tasks');
 };
 
 const updateTask = async (props) => {
